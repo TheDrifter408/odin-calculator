@@ -219,7 +219,16 @@ const numbers = [0,1,2,3,4,5,6,7,8,9]
 const operations = ['+','-','*','/'];
 
 output.addEventListener('keydown',(e) => {
-    if(numbers.includes(Number(e.key))){
+    if(e.key === 'Backspace' && output.textContent.length === 1){
+        output.textContent = "0";
+        return;
+    }       
+    if(e.key === 'Backspace' && output.textContent.length > 1){
+        let temp = output.textContent.split("");
+        temp.pop();
+        output.textContent = temp.join("");
+        return; 
+    } else if(numbers.includes(Number(e.key))){
         numberClick(e.key);
     } else if(operations.includes(e.key) && e.key === "="){
         evaluateString(output.textContent);
