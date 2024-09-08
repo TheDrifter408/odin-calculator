@@ -2,8 +2,14 @@ const calcCtn = document.querySelector('#calcCtn');
 
 const output = document.querySelector('#output');
 
-let operationStack = [];
+const snarky = document.querySelector('#snarky');
+snarky.style.color = 'red';
+snarky.style.textAlign = 'center';
+snarky.style.fontSize = '18px';
+snarky.style.marginBottom = '16px';
 
+
+let operationStack = [];
 function operationClick(operation){
     if(output.textContent === '0'){
         return;
@@ -24,10 +30,19 @@ function numberClick(number){
 }
 
 function pointClick(){
-    output.textContent += '.';
+    let temp = output.textContent.split("");
+    if(temp.includes('.')){
+        return;
+    } else {
+        output.textContent += '.';
+    }
 }
 // Operations 
 function divide(a,b){
+    if(b === 0){
+        snarky.textContent = "Nice Try! :||";
+        b = 1;
+    }
     let temp = a / b;
     let result = Number(temp.toFixed(2));
     return result;
@@ -95,90 +110,123 @@ const allButtons = [
             content:"AC",
             operation: function() {
                 output.textContent = '0';
-            }
+            },
+            backgroundColor: 'orange'
         },
         {
             content:"+/-",
             operation: () => negative(),
+            backgroundColor: 'orange'
         },
         {
             content:"%",
-            operation: () => percentage()
+            operation: () => percentage(),
+            backgroundColor: 'orange'
         },
         {
             content:"/",
-            operation: () => operationClick('/')
+            operation: () => operationClick('/'),
+            backgroundColor:'lightblue',
         },
     ],
     [
         {
             content:"7",
-            operation: () => numberClick(7)
+            operation: () => numberClick(7),
+            backgroundColor:'white',
         },
         {
             content:"8",
-            operation: () => numberClick(8)
+            operation: () => numberClick(8),
+            backgroundColor:'white',
         },
         {
             content:"9",
-            operation: () => numberClick(9)
+            operation: () => numberClick(9),
+            backgroundColor:'white',
         },
         {
             content:"*",
-            operation: () => operationClick('*')
+            operation: () => operationClick("*"),
+            backgroundColor:'lightblue',
         },
     ],
     [
         {
             content:"4",
-            operation: () => numberClick(4)
+            operation: () => numberClick(4),
+            backgroundColor:'white',
         },
         {
             content:"5",
-            operation: () => numberClick(5)
+            operation: () => numberClick(5),
+            backgroundColor:'white',
         },
         {
             content:"6",
-            operation: () => numberClick(6)
+            operation: () => numberClick(6),
+            backgroundColor:'white',
         },
         {
             content:"-",
-            operation: () => operationClick('-')
+            operation: () => operationClick("-"),
+            backgroundColor:'lightblue',
         },
     ],
     [
         {
             content:"1",
-            operation: () => numberClick(1)
+            operation: () => numberClick(1),
+            backgroundColor:'white',
         },
         {
             content:"2",
-            operation: () => numberClick(2)
+            operation: () => numberClick(2),
+            backgroundColor:'white',
         },
         {
             content:"3",
-            operation: () => numberClick(3)
+            operation: () => numberClick(3),
+            backgroundColor:'white',
         },
         {
             content:"+",
-            operation: () => operationClick('+')
+            operation: () => operationClick("+"),
+            backgroundColor:'lightblue',
         },
     ],
     [
         {
             content:'0',
-            operation: () => numberClick(0)
+            operation: () => numberClick(0),
+            backgroundColor:'white',
         },
         {
             content:'.',
-            operation: () => pointClick()
+            operation: () => pointClick("."),
+            backgroundColor:'white',
         },
         {
             content:'=',
-            operation: () => evaluateString(output.textContent)
+            operation: () => evaluateString(output.textContent),
+            backgroundColor:'pink',
         }
     ]
 ]
+
+const numbers = [0,1,2,3,4,5,6,7,8,9]
+
+const operations = ['+','-','*','/'];
+
+output.addEventListener('keydown',(e) => {
+    if(numbers.includes(Number(e.key))){
+        numberClick(e.key);
+    } else if(operations.includes(e.key) && e.key === "="){
+        evaluateString(output.textContent);
+    } else {
+        operationClick(e.key);
+    }
+})
 
 function Grid(){
     for(let i=0;i<allButtons.length;i++){
@@ -193,6 +241,7 @@ function Rows(buttonArr){
     for(let i=0;i<buttonArr.length;i++){
         const button = document.createElement('button');
         button.textContent = buttonArr[i].content;
+        button.style.backgroundColor = buttonArr[i].backgroundColor;
         button.addEventListener('click',(e) => {
             buttonArr[i].operation();
         });
