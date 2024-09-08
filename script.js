@@ -1,78 +1,183 @@
 const calcCtn = document.querySelector('#calcCtn');
 
+const output = document.querySelector('#output');
+
+let operationStack = [];
+
+function operationClick(operation){
+    if(output.textContent === '0'){
+        return;
+    } else if(operationStack.length > 0){
+        evaluateString(output.textContent);
+    } else {
+        operationStack.push(operation);
+        output.textContent += operation;
+    }
+}
+
+function numberClick(number){
+    if(output.textContent === "0"){
+        output.textContent = number;
+    } else {
+        output.textContent += number;
+    }
+}
+
+function pointClick(){
+    output.textContent += '.';
+}
+// Operations 
+function divide(a,b){
+    let temp = a / b;
+    let result = Number(temp.toFixed(2));
+    return result;
+}
+function multiply(a,b){
+    let temp = a * b;
+    return temp;
+}
+function subtract(a,b){
+    let temp = a - b;
+    return temp;
+}
+
+function add(a,b){
+    let temp = a + b;
+    return temp;
+}
+
+function negative(){
+    let temp = output.textContent;
+    temp = temp.split("");
+    if(temp[0] === '-'){
+        temp.shift();
+    } else {
+        temp.unshift('-');
+    }
+    temp = temp.join("");
+    output.textContent = temp;
+}
+
+function percentage(){
+    let temp = Number(output.textContent);
+    temp /= 100;
+    output.textContent = temp;
+}
+
+function evaluateString(input){
+    let ops = operationStack.pop();
+    let separate = input.split(ops);
+    let a = Number(separate[0]);
+    let b = Number(separate[1]);
+    let result = 0;
+    switch (ops) {
+        case '+':
+            result = add(a,b);
+            break;
+        case '-':
+            result = subtract(a,b);
+            break;
+        case '*':
+            result = multiply(a,b);
+            break;
+        case '/':
+            result = divide(a,b);
+            break;
+        default:
+            console.log(result);
+    }
+    output.textContent = result;
+}
+
 const allButtons = [
     [
         {
             content:"AC",
-            operation:'all clear'
+            operation: function() {
+                output.textContent = '0';
+            }
         },
         {
             content:"+/-",
-            operation:'all clear'
+            operation: () => negative(),
         },
         {
             content:"%",
-            operation:'all clear'
+            operation: () => percentage()
         },
         {
             content:"/",
-            operation:'all clear'
+            operation: () => operationClick('/')
         },
     ],
     [
         {
             content:"7",
-            operation:'all clear'
+            operation: () => numberClick(7)
         },
         {
             content:"8",
-            operation:'all clear'
+            operation: () => numberClick(8)
         },
         {
             content:"9",
-            operation:'all clear'
+            operation: () => numberClick(9)
         },
         {
             content:"*",
-            operation:'all clear'
+            operation: () => operationClick('*')
         },
     ],
     [
         {
             content:"4",
-            operation:'all clear'
+            operation: () => numberClick(4)
         },
         {
             content:"5",
-            operation:'all clear'
+            operation: () => numberClick(5)
         },
         {
             content:"6",
-            operation:'all clear'
+            operation: () => numberClick(6)
         },
         {
             content:"-",
-            operation:'all clear'
+            operation: () => operationClick('-')
         },
     ],
     [
         {
             content:"1",
-            operation:'all clear'
+            operation: () => numberClick(1)
         },
         {
             content:"2",
-            operation:'all clear'
+            operation: () => numberClick(2)
         },
         {
             content:"3",
-            operation:'all clear'
+            operation: () => numberClick(3)
         },
         {
             content:"+",
-            operation:'all clear'
+            operation: () => operationClick('+')
         },
     ],
+    [
+        {
+            content:'0',
+            operation: () => numberClick(0)
+        },
+        {
+            content:'.',
+            operation: () => pointClick()
+        },
+        {
+            content:'=',
+            operation: () => evaluateString(output.textContent)
+        }
+    ]
 ]
 
 function Grid(){
@@ -81,12 +186,16 @@ function Grid(){
     }
 }
 
+
 function Rows(buttonArr){
     const row = document.createElement('div');
     row.classList.add('row');
     for(let i=0;i<buttonArr.length;i++){
         const button = document.createElement('button');
         button.textContent = buttonArr[i].content;
+        button.addEventListener('click',(e) => {
+            buttonArr[i].operation();
+        });
         row.appendChild(button);
     }
     return row;

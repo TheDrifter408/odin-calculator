@@ -26,15 +26,37 @@ main {
     align-items: center;
 }
 
+#calcCtn {
+    border:2px solid black;
+    width: 350px;
+}
+
+.outputCtn {
+    border: 2px solid black;
+}
+
+.outputCtn p {
+    text-align: right;
+    padding: 2px 5px;
+    font-size: 24px;
+}
 
 .row {
     display:flex;
     justify-content: space-evenly;
 }
 
+.row:last-child button:first-child{
+    flex-grow: 2;
+}
+
 button {
+    font-family: monospace;
+    font-size: 16px;
+    border-width: 2px;
     font-size: 24px;
     width:40px;
     height:40px;
     flex:1;
+    background-color: azure;
 }
